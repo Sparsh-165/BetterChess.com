@@ -9,6 +9,7 @@ from tomllib import load
 from unittest import runner
 
 from numpy import piecewise
+from numpy.core.numeric import true_divide
 from numpy.random.mtrand import sample
 import pygame as p
 from pygame.display import gl_set_attribute
@@ -43,12 +44,15 @@ def main():
     clock = p.time.Clock()
     screen.fill(p.Color("white"))
     gs = ChessEngine.GameState()
+    valid_moves = gs.get_valid_moves
+    move_made = False #Flag variable for when a move is made, to make it such that valid_moves is only called once. Bcz its a expensive operation
+    
+    # print(gs.board)
+    # print(IMAGES.keys())
+    load_images() # Only loading this once, before the while loop.
+    running = True
     sq_selected = () #No square is selected initially, This will keep track of last mouse click location tuple:(row, col)
     player_clicks = [] # keeps track of player clicks, two tuples per click: (start_row, start_col) and (end_row, end_col)
-    print(gs.board)
-    load_images() # Only loading this once, before the while loop.
-    print(IMAGES.keys())
-    running = True
     while running:
         for event in p.event.get():
             if event.type == p.QUIT:
@@ -70,7 +74,9 @@ def main():
                 if len(player_clicks) == 2: # After 2nd click
                     move = ChessEngine.Move(player_clicks[0], player_clicks[1], gs.board)
                     print(move.get_chess_notation())
-                    gs.make_move(move)
+                    if move in valid_moves():
+                        gs.make_move(move)
+                        move_made = True
                     sq_selected = ()  # reset our clicks
                     player_clicks = []
                     
@@ -78,7 +84,11 @@ def main():
             elif event.type == p.KEYDOWN:
                 if event.key == p.K_z:# when "z" is pressed
                     gs.undo_move()
-
+                    move_made = True
+                    
+        if move_made:
+            valid_moves = gs.get_valid_moves
+            move_made = True
         draw_game_state(screen, gs)
         clock.tick(MAX_FPS)
         p.display.flip()
