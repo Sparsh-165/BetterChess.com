@@ -18,13 +18,13 @@ class GameState():
             ["--", "--", "--", "--", "--", "--", "--", "--"],
             ["--", "--", "--", "--", "--", "--", "--", "--"],
             ["--", "--", "--", "--", "--", "--", "--", "--"],
-            ["--", "--", "--", "bP", "--", "--", "--", "--"],
+            ["--", "--", "--", "--", "--", "--", "--", "--"],
             ["wP", "wP", "wP", "wP", "wP", "wP", "wP", "wP"],
             ["wR", "wN", "wB", "wQ", "wK", "wB", "wN", "wR"]
         ]
 
         self.move_function = {
-            'p' : self.get_pawn_moves,
+            'P' : self.get_pawn_moves,
             'R' : self.get_rook_moves,
             'N' : self.get_knight_moves,
             'B' : self.get_bishop_moves,
@@ -153,7 +153,7 @@ class GameState():
                 if 0 <= end_row < 8 and 0 <= end_col < 8: # check of being on the board
                     end_piece = self.board[end_row][end_col]
                     if end_piece == '--':
-                        moves. append(Move((r,c), (end_row, end_col), self.board))
+                        moves.append(Move((r,c), (end_row, end_col), self.board))
                     elif end_piece[0] == enemy_color: # Enemy piece valid move
                         moves.append(Move((r, c), (end_row, end_col), self.board))
                         break
@@ -174,9 +174,43 @@ class GameState():
     GEt all Bishop moves for the knight loacted at row, col and add these moves to the list 
     '''
 
-    def get_bishop_moves:(self, r, c, moves):
+    def get_bishop_moves(self, r, c, moves):
+        directions = ((-1,-1), (-1, 1), (1,-1), (1, 1)) # 4 diagonals
+        enemy_color = 'b' if self.white_to_move else 'w'
+        for d in directions:
+            for i in range(1, 8):
+                end_row = r + d[0]*i
+                end_col = c + d[1]*i
+                if 0 <= end_row < 8 and 0 <= end_col < 8:
+                    end_piece = self.board[end_row][end_col]
+                    if end_piece == '--': # empty space valid move
+                        moves.append(Move((r, c), (end_row, end_col), self.board))
+                    elif end_piece[0] == enemy_color: # enemy piece valid move 
+                        moves.append(Move((r,c), (end_row, end_col), self.board))
+                        break
+                    else: # friendly piece invalid move
+                        break
+                else: # off board
+                    break
+                    
+                        
+                        
+                        
+    '''
+    Get all Queen moves for the Queen located at row, col and add these moves to the list
+    '''
+
+    def get_queen_moves(self, r, c, moves):
+        pass
+
+
+    '''
+    Get all King moves for the king located at row, col and add these moves to the list
+    '''
+
+    def get_king_moves(self, r, c, moves):
+        pass
         
-    
 
 
 class Move():
