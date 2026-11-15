@@ -131,7 +131,8 @@ class GameState():
             if c + 1 <= 7 and self.board[r + 1][c + 1][0] == 'w':
                 moves.append(Move((r, c), (r + 1, c + 1), self.board))
 
-                
+        # Pawn promotion is pending 
+        # En Passant is pending
                 
                  
                 
@@ -143,11 +144,39 @@ class GameState():
     '''
 
     def get_rook_moves(self, r, c, moves):
+        direction = ((-1, 0), (0,-1), (1, 0), (0, 1)) #Direction for rook -> up, left, down, right
+        enemy_color = "b" if self.white_to_move else "w" # to set whether the enemy color is black or white using ternary operator 
+        for d in direction:
+            for i in range(1, 8):
+                end_row = r + d[0]*i
+                end_col = r + d[1]*i
+                if 0 <= end_row < 8 and 0 <= end_col < 8: # check of being on the board
+                    end_piece = self.board[end_row][end_col]
+                    if end_piece == '--':
+                        moves. append(Move((r,c), (end_row, end_col), self.board))
+                    elif end_piece[0] == enemy_color: # Enemy piece valid move
+                        moves.append(Move((r, c), (end_row, end_col), self.board))
+                        break
+                    else: # Friendly piece invalid move
+                        break
+                else: # off board
+                    break
+
+    '''
+    Get all Knight moves for the knight located at row, Col and add these moves to the list
+    '''
+
+    def get_knight_moves(self, r, c, moves):
         pass
 
+
+    '''
+    GEt all Bishop moves for the knight loacted at row, col and add these moves to the list 
+    '''
+
+    def get_bishop_moves:(self, r, c, moves):
+        
     
-
-
 
 
 class Move():
