@@ -77,8 +77,10 @@ def main():
                     if move in valid_moves():
                         gs.make_move(move)
                         move_made = True
-                    sq_selected = ()  # reset our clicks
-                    player_clicks = []
+                        sq_selected = ()  # reset our clicks
+                        player_clicks = []
+                    else:
+                        player_clicks = [sq_selected]
                     
             # key handlers
             elif event.type == p.KEYDOWN:
